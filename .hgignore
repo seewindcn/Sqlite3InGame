@@ -1,0 +1,3 @@
+syntax: glob
+u3dsqlite3/Library/*
+u3dsqlite3/Temp/*
