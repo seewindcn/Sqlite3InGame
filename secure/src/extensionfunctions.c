@@ -210,7 +210,7 @@ int double_cmp(const void *a, const void *b);
 
 typedef uint8_t         u8;
 //typedef uint16_t        u16;
-typedef int64_t         i64;
+//typedef int64_t         i64;
 
 static char *sqlite3StrDup( const char *z ) {
     char *res = sqlite3_malloc( strlen(z)+1 );
