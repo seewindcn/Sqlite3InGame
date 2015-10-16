@@ -6,15 +6,22 @@ use wxsqlite3's secure sqilte3 in unity3d and cocos2d-x quick
 sqlite3官方虽然提供了加密相关接口，不过默认的都没有实现数据加密；找到wxsqlite3，提供了加密版的sqlite3。在使用中，碰到一些坑，特建个项目记录下。
 注：cocos2d-x用的是lua绑定版v3quick。
 ##目录说明：
--secure: wxsqlite3中的加密版sqlite3目录；
--u3dsqlite3: unity3d项目例子；
--v3quick: v3quick用到的一些相关代码文件；
+- 
+* secure: wxsqlite3中的加密版sqlite3目录；
+* u3dsqlite3: unity3d项目例子；
+* v3quick: v3quick用到的一些相关代码文件；
+* EncodeDB: 对数据库进行加密的工具, u3d项目的可以直接用ChangePassword对数据库进行加密。
 可以直接参考目录和例子，直接使用。
 
 准备
 =====
 -下载wxsqlite3-3.2.1.zip，解压；wxsqlite3-3.2.1\sqlite3\secure\目录就是加密版sqlite3。
 只使用aes128，aes256相关代码(sha2.c,sha2.h)、shell.c、sqlite3userauth.h、userauth.c删除。
+编译需要添加预定义：
+```
+SQLITE_USER_AUTHENTICATION=0
+```
+项目中sqlite3secure.c有两个版本，凌乱，有空再整理；
 
 unity3d
 =======
