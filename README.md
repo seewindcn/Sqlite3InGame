@@ -5,7 +5,7 @@ use wxsqlite3's secure sqilte3 in unity3d and cocos2d-x quick
 ======
 sqlite3官方虽然提供了加密相关接口，不过默认的都没有实现数据加密；找到wxsqlite3，提供了加密版的sqlite3。在使用中，碰到一些坑，特建个项目记录下。
 注：cocos2d-x用的是lua绑定版v3quick。
-#目录说明：
+##目录说明：
 -secure: wxsqlite3中的加密版sqlite3目录；
 -u3dsqlite3: unity3d项目例子；
 -v3quick: v3quick用到的一些相关代码文件；
@@ -14,6 +14,7 @@ sqlite3官方虽然提供了加密相关接口，不过默认的都没有实现�
 准备
 =====
 -下载wxsqlite3-3.2.1.zip，解压；wxsqlite3-3.2.1\sqlite3\secure\目录就是加密版sqlite3。
+只使用aes128，aes256相关代码(sha2.c,sha2.h)、shell.c、sqlite3userauth.h、userauth.c删除。
 
 unity3d
 =======
@@ -44,7 +45,11 @@ unity3d当前版本5.2，免费版支持使用native插件扩展功能。用Mono
           private const string SQLITE_DLL = "sqlite3";
 #endif
 ```
-说明：win,osx,android,ios都需要在u3d的Player Settings中的Scripting Define Symbols中添加：SQLITE_STANDARD。
+说明：
+win,osx,android,ios都需要在u3d的Player Settings中的Scripting Define Symbols中添加：
+```
+SQLITE_STANDARD
+```
 就是，win使用sqlite3.dll，osx使用sqlite3sec.bundle，android使用sqlite3.so，ios用静态连接"__Internal"。
 unity3d for osx，在启动时应该就已经加载了系统自带的sqlite3.dylib，所有项目没办法让editor使用加密的sqlite3，只能通过改名来加载。
 加密和不加密sqlite3的使用，就在于一句代码：
@@ -82,10 +87,41 @@ ndk-build
 ```
 在u3d中，生成ios的xcode项目后，还需要手动（或者写脚本）讲Assets\Plugins\iOS\下的其它原代码复制到该xcode项目的Libraries/Plugins/iOS目录下。编译xcode，并真机运行（模拟器不能使用__Internal，好奇怪）。
 
-
-cocos2d-x v3quick
+cocos2d-x v3quick (V3.3)
 ================
+v3quick使用的是lua的sqlite3绑定库lsqlite3，在项目的目录：
+```
+frameworks\runtime-src\Classes\quick-src\lua_extensions
+```
+将secure中的代码复制过去。
 
+- win和osx使用player3来运行调试项目，win下player3是使用sqlite3.dll的，将加密版sqlite3.dll和sqlite3.lib替换到：
+```
+frameworks\cocos2d-x\external\sqlite3\libraries\win32\
+```
+修改lsqlite3.c代码，添加：
+```
+#define AES_KEY1 "1234567890123456"
+```
+改sqlite3_open为sqlite3_open_v2（好像只是设定了自读，如果只是加密并不需要）,并设置密码：
+```
+    if (sqlite3_open_v2(filename, &db->db,SQLITE_OPEN_READONLY,NULL) == SQLITE_OK) {
+    //if (sqlite3_open(filename, &db->db) == SQLITE_OK) {
+        /* database handle already in the stack - return it */
+        int result = sqlite3_key(db->db,AES_KEY1,strlen(AES_KEY1));
+        if(result==SQLITE_OK)
+        {
+            return 1;
+        }        
+    }
+```
+重新编译libcocos2d和player3项目。编译出来的player3，只能访问用指定密码加密的数据库。
+osx应该差不多吧。
 
+- android:
+修改frameworks\runtime-src\Classes\quick-src\lua_extensions\Android.mk，用sqlite3secure.c替换sqlite3.c，编译就行；好像不需要设置编译预定义；
+
+- iOS:
+待续
 
 
