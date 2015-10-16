@@ -48,7 +48,9 @@ unity3d当前版本5.2，免费版支持使用native插件扩展功能。用Mono
 就是，win使用sqlite3.dll，osx使用sqlite3sec.bundle，android使用sqlite3.so，ios用静态连接"__Internal"。
 unity3d for osx，在启动时应该就已经加载了系统自带的sqlite3.dylib，所有项目没办法让editor使用加密的sqlite3，只能通过改名来加载。
 加密和不加密sqlite3的使用，就在于一句代码：
-```conn.SetPassword(password);```
+```
+conn.SetPassword(password);
+```
 
 - win
 -- 安装premake4工具，执行：
@@ -65,7 +67,9 @@ HAVE_ATANH
 
 - android
 unity3d for android可以使用加密版的sqlite3.so。编译加密版sqlite3.so，参考secure\sqlitendk\jni目录下的Android.mk文件，Application.mk用于设定编译哪些target；在secure\sqlitendk\目录执行：
-```ndk-build```
+```
+ndk-build
+```
 就能自动编译出动态库；
 
 - mac
@@ -73,7 +77,9 @@ unity3d for android可以使用加密版的sqlite3.so。编译加密版sqlite3.s
 
 - iOS
 复制加密版sqlite3原代码到u3d的Assets\Plugins\iOS\目录，在u3d中讲除了sqlite3secure.c的其它文件的“Select platforms for plugin"项都去掉，就是生成的xcode项目不需要编译其它代码，只编译sqlite3secure.c；sqlite3secure.c需要添加编译选项"Compile flags":
-```-DSQLITE_ENABLE_COLUMN_METADATA```
+```
+-DSQLITE_ENABLE_COLUMN_METADATA
+```
 在u3d中，生成ios的xcode项目后，还需要手动（或者写脚本）讲Assets\Plugins\iOS\下的其它原代码复制到该xcode项目的Libraries/Plugins/iOS目录下。编译xcode，并真机运行（模拟器不能使用__Internal，好奇怪）。
 
 
