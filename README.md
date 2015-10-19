@@ -92,7 +92,8 @@ ndk-build
 ```
 -DSQLITE_ENABLE_COLUMN_METADATA
 ```
-在u3d中，生成ios的xcode项目后，还需要手动（或者写脚本）讲Assets\Plugins\iOS\下的其它原代码复制到该xcode项目的Libraries/Plugins/iOS目录下。编译xcode，并真机运行（模拟器不能使用__Internal，好奇怪）。
+在u3d中，生成ios的xcode项目后，还需要手动（或者写脚本）将Assets\Plugins\iOS\下的其它原代码复制到该xcode项目的Libraries/Plugins/iOS目录下。编译xcode，并真机运行（模拟器不能使用__Internal，好奇怪）。
+最新改用静态链接库libsqlite3.a，删除源码，这样编译更方便，只需要将libsqlite3.a放到Assets\Plugins\iOS\目录就ok。
 
 cocos2d-x v3quick (V3.3)
 ================
