@@ -1,4 +1,9 @@
 // To enable the extension functions define SQLITE_ENABLE_EXTFUNC on compiling this module
+#define SQLITE_ENABLE_COLUMN_METADATA 1
+#define SQLITE_HAS_CODEC 1
+#define SQLITE_USER_AUTHENTICATION 0
+
+
 #ifdef SQLITE_ENABLE_EXTFUNC
 #define sqlite3_open    sqlite3_open_internal
 #define sqlite3_open16  sqlite3_open16_internal
