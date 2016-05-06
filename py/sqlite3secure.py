@@ -13,8 +13,9 @@ libsqlite3secure = None
 ffi = None
 def init(findpath=None):
     global libsqlite3secure, ffi
-    if findpath == None: findpath = curpath
-    if sys.platform.startswith('cygwin'):
+    if findpath == None: 
+      findpath = join(curpath, 'sqlite3')
+    if sys.platform.startswith('cygwin') or sys.platform.startswith('win'):
         search_string = os.path.join(findpath, 'sqlite3.dll')
     else:
         search_string = os.path.join(findpath, 'sqlite3.so')
